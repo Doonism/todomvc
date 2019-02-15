@@ -70,7 +70,6 @@ jQuery(function ($) {
 			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
 			this.renderFooter();
 			$('#new-todo').focus();
-			util.store('todos-jquery', this.todos);
 		},
 		renderFooter: function () {
 			var todoCount = this.todos.length;
@@ -84,6 +83,11 @@ jQuery(function ($) {
 
 			$('#footer').toggle(todoCount > 0).html(template);
 		},
+
+		storeData: function () {
+			util.store('todos-jquery', this.todos);
+		},
+
 		toggleAll: function (e) {
 			var isChecked = $(e.target).prop('checked');
 
@@ -92,6 +96,7 @@ jQuery(function ($) {
 			});
 
 			this.render();
+			this.storeData();
 		},
 		getActiveTodos: function () {
 			return this.todos.filter(function (todo) {
@@ -118,6 +123,7 @@ jQuery(function ($) {
 			this.todos = this.getActiveTodos();
 			this.filter = 'all';
 			this.render();
+			this.storeData();
 		},
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
@@ -149,11 +155,13 @@ jQuery(function ($) {
 			$input.val('');
 
 			this.render();
+			this.storeData();
 		},
 		toggle: function (e) {
 			var i = this.indexFromEl(e.target);
 			this.todos[i].completed = !this.todos[i].completed;
 			this.render();
+			this.storeData();
 		},
 		edit: function (e) {
 			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
@@ -185,10 +193,12 @@ jQuery(function ($) {
 			}
 
 			this.render();
+			this.storeData();
 		},
 		destroy: function (e) {
 			this.todos.splice(this.indexFromEl(e.target), 1);
 			this.render();
+			this.storeData();
 		}
 	};
 
